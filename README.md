@@ -29,6 +29,13 @@ Just "make" shows demo after build:
     pi@pi400-64:~/square_sum_prod $ 
 
 
+Computing unique sum of squares for primes ≡1 (mod 4) took:  
+- 0.1s for [198-digit prime](https://primes.utm.edu/curios/page.php?number_id=4082) on Raspberry Pi400 with A72 CPU  
+- 3s for [2082-digit prime](https://primes.utm.edu/curios/page.php?number_id=4378) on Intel i7-1165G7 CPU  
+- 2:32min (only) for [10001-digit prime](https://primes.utm.edu/curios/page.php?number_id=2356) on i7-1165G7  
+Computation as well as Python verification for 10001-digit prime is [here](10001.txt), better for browser view [here](https://stamm-wilbrandt.de/square_sum_prod/10001.txt).
+
+
 Original README.md:
 ===================
 
