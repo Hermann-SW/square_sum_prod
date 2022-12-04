@@ -320,11 +320,6 @@ static void Bin2DecLoop(char** ppDest, bool *pSignificantZero,
       digits++;
       *ptrDest = (char)(digit[count] + '0');
       ptrDest++;
-      if ((groupCtr == 1) && (!last || (count != 0)))
-      {    // Do not insert space at the end of number.
-        *ptrDest = ' ';
-        ptrDest++;
-      }
       significantZero = true;
     }
     groupCtr--;
@@ -432,18 +427,6 @@ void Bin2Dec(char **ppDecimal, const limb *binary, int nbrLimbs, int groupLength
   {     // Number is zero.
     *ptrDest = '0';
     ptrDest++;
-  }
-  else
-  {
-    if ((digits > 30) && showDigitsText)
-    {
-      *ptrDest = ' ';
-      ptrDest++;
-      *ptrDest = '(';
-      ptrDest++;
-      int2dec(&ptrDest, digits);
-      copyStr(&ptrDest, (lang ? " dígitos)" : " digits)"));
-    }
   }
   *ptrDest = '\0';             // Add terminator.
   *ppDecimal = ptrDest;

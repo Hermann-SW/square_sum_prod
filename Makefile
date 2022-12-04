@@ -17,7 +17,7 @@
 #    along with Alpertron Calculators.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Comment out next line for standard compilation.
-flags_coverage=--coverage
+#flags_coverage=--coverage
 flags_factorization_1=-D_USING64BITS_ -DFACTORIZATION_APP=1 -DFACTORIZATION_FUNCTIONS=1 -c
 flags_squares_1=-D_USING64BITS_ -c
 flags_other_1=-D_USING64BITS_ -c
@@ -31,9 +31,17 @@ flags_squares=$(flags_squares_1) $(flags_coverage) -g -O0
 flags_other=$(flags_other_1) $(flags_coverage) -g -O0
 endif
 h_files=batch.h bignbr.h commonstruc.h expression.h factor.h highlevel.h polynomial.h showtime.h skiptest.h
-targets = ecm quad quadmod fsquares fcubes polfact dilog contfrac blockly
+targets = ecm quad quadmod fsquares fcubes polfact dilog contfrac blockly gaussian
 .PHONY : all
-all: $(targets)
+all: gaussian
+	./square_sum_prod 97
+	@echo
+	./square_sum_prod 693342667110830181197325401899700641361965863127336680673013|\
+python -c 'import sys;l=sys.stdin.read().rstrip();print(l,"\n"+str(eval(l)))'
+	@echo
+	./square_sum_prod 1105|\
+python -c 'import sys;l=sys.stdin.read().rstrip();print(l,"\n"+str(eval(l)))'
+	@echo
 
 ecm: expression.fco parseexpr.fco partition.fco errors.fco bigint.fco division.fco baseconv.fco karatsuba.fco modmult.fco sqroot.fco \
 factor.fco ecm.fco siqs.fco siqsLA.fco ecmfront.fco bignbr.fco showtime.fco from_musl.fco inputstr.fco batch.fco fft.fco gcdrings.fco fromBlockly.fco linkedbignbr.fco test_ecm.fco

@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <assert.h>
 #include "bignbr.h"
 #include "factor.h"
 #include "expression.h"
@@ -47,21 +48,12 @@ static void showText(const char *text)
 
 static void showNumber(const BigInteger *real, const BigInteger *imag)
 {
-  if (real->sign == SIGN_NEGATIVE)
-  {
-    showText("-");
-  }
+  if (ptrOutput != output)  showText(" * ");
+  showText("(");
   Bin2Dec(&ptrOutput, real->limbs, real->nbrLimbs, groupLen);
-  if (imag->sign == SIGN_POSITIVE)
-  {
-    showText(" + ");
-  }
-  else
-  {
-    showText(" - ");
-  }
+  showText("**2 + ");
   Bin2Dec(&ptrOutput, imag->limbs, imag->nbrLimbs, groupLen);
-  showText(" i");
+  showText("**2)");
 }
 
 void GaussianFactorization(void)
@@ -83,10 +75,9 @@ void GaussianFactorization(void)
 #endif
   if (BigIntIsZero(&tofactor))
   {                // Norm is zero.
-    showText("<ul><li>Any gaussian prime divides this number</li></ul>");
+assert(!"Any gaussian prime divides this number");
     return;
   }
-  showText("<ul>");
   if ((tofactor.nbrLimbs > 1) || (tofactor.limbs[0].x > 1))
   {           // norm greater than 1. Factor norm.
     int index2;
@@ -108,6 +99,7 @@ void GaussianFactorization(void)
       IntArray2BigInteger(ptrPrime, &prime);
       if ((prime.nbrLimbs == 1) && (prime.limbs[0].x == 2))
       {             // Prime factor is 2.
+assert(!"prime 2");
         for (index2 = 0; index2 < pstFactor->multiplicity; index2++)
         {
           M1.nbrLimbs = 1;
@@ -197,12 +189,11 @@ void GaussianFactorization(void)
         for (index2 = 0; index2 < pstFactor->multiplicity; index2++)
         {
           DivideGaussian(&mult1, &mult2);
-          BigIntNegate(&mult2, &Tmp);
-          DivideGaussian(&mult1, &Tmp);
         }
       }              // end p = 1 (mod 4)
       else
       {              // if p = 3 (mod 4)
+assert(!"p = 3 (mod 4)");
         bigExpon.nbrLimbs = 1;    // q <- 0
         bigExpon.limbs[0].x = 0;
         bigExpon.sign = SIGN_POSITIVE;
@@ -214,30 +205,6 @@ void GaussianFactorization(void)
       pstFactor++;
     }
   }
-  // Process units: 1, -1, i, -i.
-  if ((ReValue.nbrLimbs == 1) && (ReValue.limbs[0].x == 1))
-  {
-    if (ReValue.sign == SIGN_POSITIVE)
-    {             // Value is 1.
-      if (NbrFactorsNorm == 0)
-      {
-        showText("No gaussian prime divides this number");
-      }
-    }
-    else
-    {            // Value is -1.
-      showText("<li>-1</li>");
-    }
-  }
-  else if (ImValue.sign == SIGN_POSITIVE)
-  {
-    showText("<li>i</li>");
-  }
-  else
-  {
-    showText("<li>-i</li>");
-  }
-  showText("</ul>");
 }
 
 static void DivideGaussian(const BigInteger *real, const BigInteger *imag)
@@ -265,9 +232,7 @@ static void DivideGaussian(const BigInteger *real, const BigInteger *imag)
     {
       (void)BigIntDivide(&realNum, &norm, &ReValue);
       (void)BigIntDivide(&imagNum, &norm, &ImValue);
-      showText("<li>");
       showNumber(real, imag);
-      showText("</li>");
     }
   }
 }
@@ -280,35 +245,20 @@ void gaussianText(char *valueText, int doFactorization)
 #endif
   rc = ComputeGaussianExpression(valueText, value);
   output[0] = '2';
-  ptrOutput = &output[1];
+  ptrOutput = &output[0];
   if (rc == EXPR_OK)
   {
     CopyBigInt(&ReValue, &value[0]);
     CopyBigInt(&ImValue, &value[1]);
     if (doFactorization != '0')
     {
-      showText(lang ? "<p>Factores de " : "<p>Factors of ");
-    }
-    else
-    {
-      showText(lang ? "<p>El valor es " : "<p>Value is equal to ");
-    }
-    showNumber(&ReValue, &ImValue);
-    if (doFactorization != '0')
-    {
       GaussianFactorization();
-      copyStr(&ptrOutput, "<p>");
-      showElapsedTime(&ptrOutput);
-      copyStr(&ptrOutput, "</p>");
     }
   }
   if (rc != EXPR_OK)
   {
     textError(&ptrOutput, rc);
   }
-  copyStr(&ptrOutput, "<p>");
-  copyStr(&ptrOutput, lang ? COPYRIGHT_SPANISH: COPYRIGHT_ENGLISH);
-  copyStr(&ptrOutput, "</p>");
 }
 
 #if defined __EMSCRIPTEN__ && !defined _MSC_VER

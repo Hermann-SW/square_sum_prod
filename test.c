@@ -242,13 +242,13 @@ int main(int argc, char* argv[])
   dilogText(argv[1], argv[2], argv[3], 6);
   (void)printf("%s\n", output);
 #elif DEBUG_CODE == 12
-  if (argc != 3)
+  if (argc != 2)
   {
     (void)printf("value factorize\n");
     return 0;
   }
-  gaussianText(argv[1], argv[2][0]);
-  (void)printf("%s\n", output);
+  gaussianText(argv[1], 1);
+  (void)printf("%s == %s\n", output, argv[1]);
 #elif DEBUG_CODE == 13
   skipPrimality = false;
   lang = false;
