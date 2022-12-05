@@ -17,7 +17,7 @@ Any factor 2 or "=3 (mod 4)" will assert in squaare_sum_prod and abort Python.
 import subprocess
 import sys
 
-def sum_of_squares(n):
+def square_sum_prod(n):
     cmd = "square_sum_prod " + str(n) + " py"
 
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -29,4 +29,4 @@ def sum_of_squares(n):
     print("#"+str(out[0].decode())+"#")
 
 
-sum_of_squares(sys.argv[1] if len(sys.argv) > 1 else 1105)
+square_sum_prod(sys.argv[1] if len(sys.argv) > 1 else 1105)
