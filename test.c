@@ -38,7 +38,7 @@ static char bufferXML[1000000];
 #endif
 void assignExponent(char c);
 void dilogText(const char *baseText, const char *powerText, const char *modText, int groupLen);
-void gaussianText(char *valueText, int doFactorization);
+void gaussianText(char *valueText, int python);
 void ecmFrontText(char *tofactorText, bool doFactorization, char *knownFactors);
 int Factor1[] = { 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00 };
 int Factor2[] = { 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00 };
@@ -242,13 +242,20 @@ int main(int argc, char* argv[])
   dilogText(argv[1], argv[2], argv[3], 6);
   (void)printf("%s\n", output);
 #elif DEBUG_CODE == 12
-  if (argc != 2)
+  if (argc < 2 || argc > 3)
   {
-    (void)printf("value factorize\n");
+    (void)printf("value [python]\n");
     return 0;
   }
-  gaussianText(argv[1], 1);
-  (void)printf("%s == %s\n", output, argv[1]);
+  gaussianText(argv[1], argc > 2);
+  if (argc == 2)
+  {
+    (void)printf("%s == %s\n", output, argv[1]);
+  }
+  else
+  {
+    (void)printf("%s", output);
+  }
 #elif DEBUG_CODE == 13
   skipPrimality = false;
   lang = false;

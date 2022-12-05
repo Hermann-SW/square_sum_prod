@@ -37,7 +37,7 @@ static limb bigBase[MAX_LEN];
 static BigInteger mult1;
 static BigInteger mult2;
 static limb minusOneMont[MAX_LEN];
-static void DivideGaussian(const BigInteger *real, const BigInteger *imag);
+static void DivideGaussian(const BigInteger *real, const BigInteger *imag, int python);
 static BigInteger value[2];
 extern BigInteger tofactor;
 
@@ -46,17 +46,18 @@ static void showText(const char *text)
   copyStr(&ptrOutput, text);
 }
 
-static void showNumber(const BigInteger *real, const BigInteger *imag)
+static void showNumber(const BigInteger *real, const BigInteger *imag, int python)
 {
-  if (ptrOutput != output)  showText(" * ");
-  showText("(");
+  char *betw[2][2] = {{"**2 + ", ","}, {" * ", ","}};
+  if (ptrOutput != output)  showText(betw[1][python]);
+  if (!python)  showText("(");
   Bin2Dec(&ptrOutput, real->limbs, real->nbrLimbs, groupLen);
-  showText("**2 + ");
+  showText(betw[0][python]);
   Bin2Dec(&ptrOutput, imag->limbs, imag->nbrLimbs, groupLen);
-  showText("**2)");
+  if (!python)  showText("**2)");
 }
 
-void GaussianFactorization(void)
+void GaussianFactorization(int python)
 {
   BigInteger prime;
   BigInteger bigExpon;
@@ -108,8 +109,8 @@ assert(!"prime 2");
           M2.limbs[0].x = 1;
           M1.sign = SIGN_POSITIVE;
           M2.sign = SIGN_NEGATIVE;
-          DivideGaussian(&M1, &M1);           // Divide by 1+i
-          DivideGaussian(&M1, &M2);           // Divide by 1-i
+          DivideGaussian(&M1, &M1, python);           // Divide by 1+i
+          DivideGaussian(&M1, &M2, python);           // Divide by 1-i
         }
       }
       if ((prime.limbs[0].x & 2) == 0)
@@ -188,7 +189,7 @@ assert(!"prime 2");
         }
         for (index2 = 0; index2 < pstFactor->multiplicity; index2++)
         {
-          DivideGaussian(&mult1, &mult2);
+          DivideGaussian(&mult1, &mult2, python);
         }
       }              // end p = 1 (mod 4)
       else
@@ -199,7 +200,7 @@ assert(!"p = 3 (mod 4)");
         bigExpon.sign = SIGN_POSITIVE;
         for (index2 = 0; index2 < pstFactor->multiplicity; index2++)
         {
-          DivideGaussian(&prime, &bigExpon);
+          DivideGaussian(&prime, &bigExpon, python);
         }            // end p = 3 (mod 4)
       }
       pstFactor++;
@@ -207,7 +208,7 @@ assert(!"p = 3 (mod 4)");
   }
 }
 
-static void DivideGaussian(const BigInteger *real, const BigInteger *imag)
+static void DivideGaussian(const BigInteger *real, const BigInteger *imag, int python)
 {
   BigInteger Tmp;
   BigInteger norm;
@@ -232,12 +233,12 @@ static void DivideGaussian(const BigInteger *real, const BigInteger *imag)
     {
       (void)BigIntDivide(&realNum, &norm, &ReValue);
       (void)BigIntDivide(&imagNum, &norm, &ImValue);
-      showNumber(real, imag);
+      showNumber(real, imag, python);
     }
   }
 }
 
-void gaussianText(char *valueText, int doFactorization)
+void gaussianText(char *valueText, int python)
 {
   enum eExprErr rc;
 #ifndef __EMSCRIPTEN__
@@ -250,10 +251,7 @@ void gaussianText(char *valueText, int doFactorization)
   {
     CopyBigInt(&ReValue, &value[0]);
     CopyBigInt(&ImValue, &value[1]);
-    if (doFactorization != '0')
-    {
-      GaussianFactorization();
-    }
+    GaussianFactorization(python);
   }
   if (rc != EXPR_OK)
   {

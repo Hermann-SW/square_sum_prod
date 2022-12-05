@@ -36,6 +36,8 @@ targets = ecm quad quadmod fsquares fcubes polfact dilog contfrac blockly gaussi
 all: gaussian
 	./square_sum_prod 97
 	@echo
+	./square_sum_prod 169 py
+	@echo
 	./square_sum_prod 693342667110830181197325401899700641361965863127336680673013|\
 python -c 'import sys;l=sys.stdin.read().rstrip();print(l,"\n"+str(eval(l)))'
 	@echo
