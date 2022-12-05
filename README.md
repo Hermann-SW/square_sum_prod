@@ -15,7 +15,9 @@ Just "make" shows demo after build:
     pi@pi400-64:~/square_sum_prod $ make
     ./square_sum_prod 97
     (9**2 + 4**2) == 97
-    
+
+    ./square_sum_prod 169 py
+    3,2,3,2
     ./square_sum_prod 693342667110830181197325401899700641361965863127336680673013|\
     python -c 'import sys;l=sys.stdin.read().rstrip();print(l,"\n"+str(eval(l)))'
     (832050675380196295918334279642**2 + 32161167736719180733109944457**2) == 693342667110830181197325401899700641361965863127336680673013 
@@ -28,6 +30,8 @@ Just "make" shows demo after build:
     
     pi@pi400-64:~/square_sum_prod $ 
 
+
+Second example demonstrates quick and dirty Python support, see comments in [Popen.py](Popen.py) for details (I know that dirty remains long after quick is gone).
 
 Computing unique sum of squares for primes ≡1 (mod 4) took:  
 - 0.1s for [198-digit prime](https://primes.utm.edu/curios/page.php?number_id=4082) on Raspberry Pi400 with A72 CPU  
