@@ -12,7 +12,7 @@ $ python Popen.py 221
 #3,2,4,1#
 $
 
-Any factor 2 or "=3 (mod 4)" will assert in squaare_sum_prod and abort Python.
+Any factor 2 or "=3 (mod 4)" will assert in square_sum_prod and abort Python.
 """
 import subprocess
 import sys
