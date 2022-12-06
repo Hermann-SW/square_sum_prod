@@ -20,6 +20,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
+#include <unistd.h>
 #include "bignbr.h"
 #include "expression.h"
 #include "highlevel.h"
@@ -242,9 +244,25 @@ int main(int argc, char* argv[])
   dilogText(argv[1], argv[2], argv[3], 6);
   (void)printf("%s\n", output);
 #elif DEBUG_CODE == 12
-  if (argc < 2 || argc > 3)
+  if (argc > 3)
   {
-    (void)printf("value [python]\n");
+    (void)printf("[value [python]]\n");
+    return 0;
+  }
+  if (argc == 1)
+  {
+    (void)fgets(output, 3000000, stdin);
+    while (!feof(stdin))
+    {
+      char *p = strchr(output, '\n');
+      assert(p != NULL);
+      *p = 0;
+      gaussianText(output, 1);
+      (void)printf("%s\n", output);
+      (void)fflush(stdout);
+
+      (void)fgets(output, 3000000, stdin);
+    }
     return 0;
   }
   gaussianText(argv[1], argc > 2);
